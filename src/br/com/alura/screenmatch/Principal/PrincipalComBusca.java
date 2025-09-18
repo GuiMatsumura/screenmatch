@@ -7,6 +7,7 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -23,6 +24,11 @@ public class PrincipalComBusca {
 
         List<Titulo> titulos = new ArrayList<>();
 
+        Gson gson = new GsonBuilder()
+                .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
+                .setPrettyPrinting()
+                .create();
+
         while (!busca.equalsIgnoreCase("sair")) {
             System.out.println("Digite o nome de um filme");
             busca = leitura.nextLine();
@@ -31,7 +37,7 @@ public class PrincipalComBusca {
                 break;
             }
 
-            String endereco = "http://www.omdbapi.com/?t=" + busca.replace(" ", "+") + "&apikey=****";
+            String endereco = "http://www.omdbapi.com/?t=" + busca.replace(" ", "+") + "&apikey=d242246a";
 
             try {
                 HttpClient client = HttpClient.newHttpClient();
@@ -43,10 +49,6 @@ public class PrincipalComBusca {
 
                 String json = response.body();
                 System.out.println(json);
-
-                Gson gson = new GsonBuilder()
-                        .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
-                        .create();
 
                 TituloOmdb meuTituloOmdb = gson.fromJson(response.body(), TituloOmdb.class);
                 System.out.println(meuTituloOmdb);
@@ -68,6 +70,10 @@ public class PrincipalComBusca {
             }
         }
         System.out.println(titulos);
+
+        FileWriter escrita = new FileWriter("Filmes.json");
+        escrita.write(gson.toJson(titulos));
+        escrita.close();
         System.out.println("Programa finalizado");
     }
 }
