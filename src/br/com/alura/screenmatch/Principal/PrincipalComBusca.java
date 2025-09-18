@@ -23,7 +23,7 @@ public class PrincipalComBusca {
 
         List<Titulo> titulos = new ArrayList<>();
 
-        while (busca.equalsIgnoreCase("sair")) {
+        while (!busca.equalsIgnoreCase("sair")) {
             System.out.println("Digite o nome de um filme");
             busca = leitura.nextLine();
 
